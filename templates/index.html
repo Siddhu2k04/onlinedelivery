@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* 🌈 Base Styles */
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(120deg, #f0f4f8, #ffffff);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        form input, form button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        form button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        form button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        table th {
+            background: #007bff;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        table tr:hover {
+            background: #f1f1f1;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* 🌐 Responsive */
+        @media (max-width: 768px) {
+            form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            table tr {
+                margin-bottom: 15px;
+                border-bottom: 2px solid #ddd;
+            }
+
+            table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+
+            table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                text-align: left;
+                font-weight: bold;
+            }
+
+            table th {
+                display: none;
+            }
+        }
+
+        /* 🌟 Interactive Highlights */
+        .available {
+            color: green;
+            font-weight: bold;
+        }
+
+        .busy {
+            color: red;
+            font-weight: bold;
+        }
+
+        .delivered {
+            background-color: #d4edda !important;
+        }
+
+        .cancelled {
+            background-color: #f8d7da !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Online Food Delivery Simulation</h1>
+
+        <h2>Add New Order</h2>
+        <form action="{{ url_for('add_order') }}" method="POST">
+            <input type="text" name="customer_name" placeholder="Customer Name" required>
+            <input type="number" name="location_x" placeholder="X Coordinate" required>
+            <input type="number" name="location_y" placeholder="Y Coordinate" required>
+            <button type="submit">Add Order</button>
+        </form>
+
+        <h2>Orders</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Agent</th>
+                <th>ETA</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+            <tr class="{{ order.status | lower }}">
+                <td data-label="ID">{{ order.id }}</td>
+                <td data-label="Customer">{{ order.customer_name }}</td>
+                <td data-label="Location">{{ order.location }}</td>
+                <td data-label="Status">{{ order.status }}</td>
+                <td data-label="Agent">
+                    {% if order.agent_id %}
+                        {% for a in agents %}
+                            {% if a.id == order.agent_id %}
+                                {{ a.name }}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        Not Assigned
+                    {% endif %}
+                </td>
+                <td data-label="ETA">{{ order.eta if order.eta else "-" }}</td>
+                <td data-label="Actions">
+                    {% if order.status != "Delivered" and order.status != "Cancelled" %}
+                        <a href="{{ url_for('cancel_order', order_id=order.id) }}">Cancel</a> |
+                        <a href="{{ url_for('reassign_order', order_id=order.id) }}">Reassign</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Delivery Agents</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for agent in agents %}
+            <tr>
+                <td data-label="ID">{{ agent.id }}</td>
+                <td data-label="Name">{{ agent.name }}</td>
+                <td data-label="Location">{{ agent.location }}</td>
+                <td data-label="Status" class="{{ 'available' if agent.available else 'busy' }}">
+                    {{ "Available" if agent.available else "Busy" }}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Optional JavaScript for interactive highlights -->
+    <script>
+        // Highlight rows when hovered
+        document.querySelectorAll('table tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.backgroundColor = '#e0f7fa';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.backgroundColor = '';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+/* 🌈 Base Styles */
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    background: linear-gradient(120deg, #e3f2fd, #ffffff);
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* 🌟 Container */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 25px 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #007BFF;
+    margin-bottom: 20px;
+}
+
+/* 🌐 Form Styles */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+form input[type="text"],
+form input[type="number"],
+form select {
+    padding: 6px 10px; /* smaller padding */
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    flex: 1 1 150px; /* smaller width */
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+form input:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 6px rgba(0,123,255,0.3);
+    outline: none;
+}
+
+form button, input[type="submit"] {
+    padding: 8px 16px;
+    cursor: pointer;
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+form button:hover, input[type="submit"]:hover {
+    background: #b4148e;
+    transform: scale(1.05);
+}
+
+/* 🌟 Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+th, td {
+    padding: 10px 12px; /* smaller padding */
+    text-align: center;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+th {
+    background: #f236aa;
+    color: #fff;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background: #f7f9fc;
+}
+
+tr:hover {
+    background: #e6f0ff;
+}
+
+/* 🌈 Status Colors */
+.available {
+    color: green;
+    font-weight: bold;
+}
+
+.busy {
+    color: red;
+    font-weight: bold;
+}
+
+.delivered {
+    background-color: #d4edda !important;
+    color: #155724;
+    font-weight: bold;
+}
+
+.cancelled {
+    background-color: #f8d7da !important;
+    color: #721c24;
+    font-weight: bold;
+}
+
+/* 🌐 Links */
+a {
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* 🌟 Responsive */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    form input[type="text"],
+    form input[type="number"],
+    form select,
+    form button,
+    input[type="submit"] {
+        flex: 1 1 auto;
+        width: 100%;
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    tr {
+        margin-bottom: 15px;
+        border-bottom: 2px solid #ddd;
+    }
+
+    td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        font-size: 13px;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    th {
+        display: none;
+    }
+}
+
+/* 🌟 Interactive Highlight */
+table tbody tr {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+table tbody tr:hover {
+    box-shadow: 0 2px 10px rgba(0,123,255,0.1);
+    background-color: #e6f0ff;
+}
